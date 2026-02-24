@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   textDisplayTitle: {
-    marginTop: height * 0.005,
+    marginTop: height * 0.01,
     fontSize: width * 0.06,
     fontWeight: "bold", 
   },

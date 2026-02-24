@@ -102,12 +102,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textInputTitle: {
-    fontSize: width * 0.06,
+    fontSize: width * 0.05,
+    fontWeight: 'bold',
     borderBottomColor: 'black',
     borderBottomWidth: 1, 
   },
   textInputNote: {
-    fontSize: width * 0.05,
+    fontSize: width * 0.04,
     marginTop: height * 0.001,
     flex: 1,
   },
