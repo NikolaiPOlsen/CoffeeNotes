@@ -1,6 +1,7 @@
+import { HomeButton } from '@/components/appButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -46,7 +47,7 @@ export function NewNoteScreen( {navigation} ) {
 
       <TextInput
         placeholder="Title"
-        placeholderTextColor={'#CFCFCF'}
+        placeholderTextColor={'#AAAAAA'}
         style={styles.textInputTitle}
         onChangeText={setTitle}
       />
@@ -54,20 +55,13 @@ export function NewNoteScreen( {navigation} ) {
       <TextInput
         multiline={true}
         placeholder="Note"
-        placeholderTextColor={'#CFCFCF'}
+        placeholderTextColor={'#AAAAAA'}
         style={styles.textInputNote}
         onChangeText={setNoteMessage}
       />
 
       <View style={styles.formButtonRow}>
-        <Pressable
-          onPress={logData}
-          style={({ pressed }) => [
-            styles.formButtons,
-            {backgroundColor: "#735530"},
-            pressed && styles.pressedButton]}>
-          <Text style={styles.smallButtonText}>Create</Text>
-        </Pressable>
+        <HomeButton onPress={logData} label={"Create"} ></HomeButton>
       </View>
 
     </KeyboardAvoidingView>
@@ -79,6 +73,7 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   boxContainer: {
+    backgroundColor: '#F7F4E1',
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',

@@ -1,8 +1,8 @@
+import { HomeButton } from '@/components/appButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Dimensions, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function HomeScreen( {navigation} ) {
@@ -52,33 +52,17 @@ export function HomeScreen( {navigation} ) {
       <Text style={styles.subherotitle}>Your easy to use notes app</Text>
       <Text style={styles.descriptiveText}>Notes:</Text>
 
-      <FlatList style={{ height: 'height * 0.9' }} data={notes} renderItem={renderedNote} keyExtractor={(item) => item.id.toString()}/>
+      <FlatList style={{ flex: 1 }} data={notes} renderItem={renderedNote} keyExtractor={(item) => item.id.toString()}/>
 
     <View style={styles.pageSpace}>
-      <Pressable
-        onPress={() => navigation.navigate("New Note")}
-        style={({ pressed }) => [
-          styles.newNoteButton,
-          {backgroundColor: "#735530"},
-          pressed && styles.pressedButton]}>
-          <Text style={styles.buttonText}>{"New note"}</Text>
-          <MaterialIcons name="article" size={width * 0.07} color="white"/>
-      </Pressable>
+      <HomeButton onPress={() => navigation.navigate("New Note")} label={"New Note"} ></HomeButton>
     </View>
       <Modal animationType='slide' visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
-        <SafeAreaView style={styles.modalView}>
+        <View style={[styles.modalView, { paddingTop: height * 0.05,  paddingBottom: height * 0.05}]}>
           <Text style={styles.textDisplayTitle} >Title: {selectedNote?.title}</Text>
           <Text style={styles.textDisplayNote}>Message: {selectedNote?.noteMessage}</Text>
-          <Pressable
-              onPress={() => setModalVisible(false)} 
-              style={({ pressed }) => [
-                styles.newNoteButton,
-                {backgroundColor: "#735530"}, 
-                pressed && styles.pressedButton]}>
-                    <Text style={styles.buttonText}>{"Back"}</Text>
-                    <MaterialIcons name="home" size={width * 0.07} color="white"/>
-        </Pressable>
-        </SafeAreaView>
+          <HomeButton onPress={() => setModalVisible(false)} label={"Back"} ></HomeButton>
+        </View>
       </Modal>
     </SafeAreaView>
     )
@@ -88,6 +72,7 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#F7F4E1',
     flex: 1,
     flexDirection: 'column',
   },
@@ -129,6 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
+    backgroundColor: '#F7F4E1',
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
