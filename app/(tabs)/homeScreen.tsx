@@ -1,8 +1,11 @@
 import { HomeButton } from '@/components/appButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NoteMenu } from '@/components/menu';
+import { supabase } from '@/utils/supabase';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Dimensions, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function HomeScreen( {navigation} ) {
@@ -16,17 +19,18 @@ export function HomeScreen( {navigation} ) {
     }, [])
 );
 
-  //const clearStorage = async () => {
-    //await AsyncStorage.clear();
-    //setNotes([]);
-  //}
-
   const getData = async () => {
     try {
-      const savedNotes = await AsyncStorage.getItem('notes');
-      if (savedNotes) {
-        setNotes(JSON.parse(savedNotes));
-      }
+      const { data, error } = await supabase
+      .from('Notes')
+      .select('*')
+
+      console.log('data:', data)
+      console.log('error:', error)
+
+      if (error) throw error;
+      setNotes(data);
+
     } catch(error) {
       console.log(error);
     }
@@ -37,10 +41,12 @@ export function HomeScreen( {navigation} ) {
   }
   const renderedNote = ({ item }) => {
     return (
-    <TouchableOpacity onPress={() => handleOnPress(item)} activeOpacity={0.7}>
+    <TouchableOpacity onPress={() => handleOnPress(item)} activeOpacity={0.6}>
         <View style={{ paddingLeft: 10, margin: 10 }}>
-          <Text style={{ fontSize: width * 0.05, fontWeight: 'bold' }}>{item.title}</Text>
-          <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.noteMessage}</Text>
+          <Text style={{ fontSize: width * 0.05, fontWeight: 'bold' }}>{item.note_title}</Text>
+          <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.note_message}</Text>
+          <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.created_at}</Text>
+          <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.user_id}</Text>
         </View>
     </TouchableOpacity>
     );
@@ -48,6 +54,11 @@ export function HomeScreen( {navigation} ) {
 
     return (
     <SafeAreaView style={styles.container}>
+
+      <Pressable onPress={() => navigation.navigate("User")}>
+        <MaterialIcons style={styles.userProfile} name="person" color="#7F5522" size={35}/>
+      </Pressable>
+
       <Text style={styles.herotitle}>FastNotes</Text>
       <Text style={styles.subherotitle}>Your easy to use notes app</Text>
       <Text style={styles.descriptiveText}>Notes:</Text>
@@ -58,11 +69,16 @@ export function HomeScreen( {navigation} ) {
       <HomeButton onPress={() => navigation.navigate("New Note")} label={"New Note"} ></HomeButton>
     </View>
       <Modal animationType='slide' visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+        <MenuProvider>
         <View style={[styles.modalView, { paddingTop: height * 0.05,  paddingBottom: height * 0.05}]}>
-          <Text style={styles.textDisplayTitle} >Title: {selectedNote?.title}</Text>
-          <Text style={styles.textDisplayNote}>Message: {selectedNote?.noteMessage}</Text>
+          <NoteMenu>
+              <MaterialIcons name='menu' size={35}/>
+          </NoteMenu>
+          <Text style={styles.textDisplayTitle}>Title: {selectedNote?.note_title}</Text>
+          <Text style={styles.textDisplayNote}>Message: {selectedNote?.note_message}</Text>
           <HomeButton onPress={() => setModalVisible(false)} label={"Back"} ></HomeButton>
         </View>
+        </MenuProvider>
       </Modal>
     </SafeAreaView>
     )
@@ -129,6 +145,10 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     marginTop: height * 0.001,
     flex: 1,
+  },
+  userProfile: {
+    marginLeft: width * 0.05,
+    marginTop: height * 0.01,
   }
   
 });

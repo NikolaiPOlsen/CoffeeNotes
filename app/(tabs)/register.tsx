@@ -22,8 +22,8 @@ export default function RegisterScreen( {navigation}) {
         <SafeAreaView style={styles.container}>
             <Text style={styles.headerText}>Register account</Text>
             <TextInput style={styles.textInputBox} placeholder={"Email"} onChangeText={setEmail}></TextInput>
-            <TextInput style={styles.textInputBox} placeholder={"Password"} onChangeText={setPassword}></TextInput>
-            <TextInput style={styles.textInputBox} placeholder={"Re-enter password"}></TextInput>
+            <TextInput style={styles.textInputBox} placeholder={"Password"} onChangeText={setPassword} secureTextEntry={true}></TextInput>
+            <TextInput style={styles.textInputBox} placeholder={"Re-enter password"} secureTextEntry={true}></TextInput>
             <AppButton onPress={signUp} label="Register account" icon={<MaterialIcons name="person" size={width * 0.07} color="white"/>}/>
         </SafeAreaView>
     )

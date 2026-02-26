@@ -1,5 +1,6 @@
 import { HomeButton } from '@/components/appButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthContext } from '@/hooks/use-auth-context';
+import { supabase } from '@/utils/supabase';
 import React, { useState } from 'react';
 import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export function NewNoteScreen( {navigation} ) {
   const [title, setTitle] = useState("");
   const [noteMessage, setNoteMessage] = useState("");
+  const { claims } = useAuthContext();
 
   const logData = async () => {
     if (!title.trim()) {
@@ -19,18 +21,15 @@ export function NewNoteScreen( {navigation} ) {
       return;
     }
     try {
-      const existingNotes = await AsyncStorage.getItem('notes');
-      const notesArray = existingNotes ? JSON.parse(existingNotes) : [];
+      const { error } = await supabase
+      .from('Notes')
+      .insert({
+        note_title: title,
+        note_message: noteMessage,
+        user_id: claims?.id,
+      })
 
-      const newNote = {
-        id: Date.now(),
-        title: title,
-        noteMessage: noteMessage,
-      };
-
-      notesArray.push(newNote);
-
-      await AsyncStorage.setItem('notes', JSON.stringify(notesArray));
+      if (error) throw error;
 
       console.log('Note saved!');
       {navigation.popTo('Home')};
@@ -42,7 +41,7 @@ export function NewNoteScreen( {navigation} ) {
     return(
         <SafeAreaView style={styles.boxContainer}>
     <KeyboardAvoidingView
-      style={{ flex: 1, width: 'width * 0.9' }}
+      style={{ flex: 1, width: width * 0.9 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
 
       <TextInput
