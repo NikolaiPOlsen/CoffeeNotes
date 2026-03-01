@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from 'expo-status-bar';
 import { MenuProvider } from 'react-native-popup-menu';
 import UserScreen from '../user';
+import { EditNoteScreen } from './editNoteScreen';
 import LoginScreen from './login';
 import RegisterScreen from './register';
 import StartScreen from './start';
@@ -22,8 +23,8 @@ function Navigator() {
         <>
           <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
           <Stack.Screen name="New Note" component={NewNoteScreen} options={{ headerBackTitle: 'Back', headerStyle: { backgroundColor: '#F7F4E1' }, headerTintColor: 'black' }}/>
-          <Stack.Screen name="User" component={UserScreen} options={{ headerBackTitle: 'Back', headerStyle: { backgroundColor: '#F7F4E1' }, headerTintColor: 'black',
-  }}/>
+          <Stack.Screen name="User" component={UserScreen} options={{ headerBackTitle: 'Back', headerStyle: { backgroundColor: '#F7F4E1' }, headerTintColor: 'black',}}/>
+          <Stack.Screen name="Edit Note" component={EditNoteScreen} options={{ headerBackTitle: 'Back', headerStyle: { backgroundColor: '#F7F4E1' }, headerTintColor: 'black',}}/>
         </>
       ) : (
         <>
@@ -39,11 +40,10 @@ function Navigator() {
 const app = () => {
   return (
     <AuthProvider>
-      <MenuProvider>
+      <MenuProvider skipInstanceCheck>
       <SplashScreenController />
       <Navigator />
       <StatusBar style="auto" />
-      <SplashScreenController />
       </MenuProvider>
     </AuthProvider>
   );

@@ -2,7 +2,7 @@ import { AppButton } from '@/components/appButton';
 import { supabase } from '@/utils/supabase';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { useState } from 'react';
-import { Alert, Dimensions, StyleSheet, Text, TextInput } from 'react-native';
+import { Alert, Dimensions, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen( {navigation}) {
@@ -20,10 +20,12 @@ export default function LoginScreen( {navigation}) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.headerText}>Login</Text>
-            <TextInput style={styles.textInputBox} placeholder={"Email/Username"} onChangeText={setEmail} autoCapitalize="none"></TextInput>
-            <TextInput style={styles.textInputBox} placeholder={"Password"} onChangeText={setPassword} secureTextEntry={true}></TextInput>
-            <AppButton onPress={signIn} label="Login" icon={<MaterialIcons name="person" size={width * 0.07} color="white"/>}/>
+            <KeyboardAvoidingView style={{ alignItems: 'center' }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
+                <Text style={styles.headerText}>Login</Text>
+                <TextInput style={styles.textInputBox} placeholder={"Email/Username"} onChangeText={setEmail} autoCapitalize="none"></TextInput>
+                <TextInput style={styles.textInputBox} placeholder={"Password"} onChangeText={setPassword} secureTextEntry={true}></TextInput>
+                <AppButton onPress={signIn} label="Login" icon={<MaterialIcons name="person" size={width * 0.07} color="white"/>}/>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
@@ -31,9 +33,9 @@ export default function LoginScreen( {navigation}) {
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create ({
     container: {
+        backgroundColor: '#F7F4E1',
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: '#F7F4E1',
         justifyContent: 'center',
         alignItems: 'center',
     },

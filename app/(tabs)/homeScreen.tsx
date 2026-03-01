@@ -1,10 +1,10 @@
 import { HomeButton } from '@/components/appButton';
 import { NoteMenu } from '@/components/menu';
-import { supabase } from '@/utils/supabase';
+import { getData } from '@/utils/noteUtils';
 import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Dimensions, FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Dimensions, FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -12,39 +12,36 @@ export function HomeScreen( {navigation} ) {
   const [notes, setNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchNotes = async () => {
+    const data = await getData();
+    setNotes(data);
+}
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchNotes();
+    setRefreshing(false);
+})
 
   useFocusEffect(
     React.useCallback(() => {
-      getData();
+        fetchNotes();
     }, [])
 );
 
-  const getData = async () => {
-    try {
-      const { data, error } = await supabase
-      .from('Notes')
-      .select('*')
-
-      console.log('data:', data)
-      console.log('error:', error)
-
-      if (error) throw error;
-      setNotes(data);
-
-    } catch(error) {
-      console.log(error);
-    }
-  };
   const handleOnPress = (item) => {
     setSelectedNote(item);
     setModalVisible(true);
   }
+
   const renderedNote = ({ item }) => {
     return (
     <TouchableOpacity onPress={() => handleOnPress(item)} activeOpacity={0.6}>
         <View style={{ paddingLeft: 10, margin: 10 }}>
           <Text style={{ fontSize: width * 0.05, fontWeight: 'bold' }}>{item.note_title}</Text>
-          <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.note_message}</Text>
+          <Text style={{ fontSize: width * 0.04, marginTop: 5 }} numberOfLines={1}>{item.note_message}</Text>
           <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.created_at}</Text>
           <Text style={{ fontSize: width * 0.04, marginTop: 5 }}>{item.user_id}</Text>
         </View>
@@ -63,7 +60,8 @@ export function HomeScreen( {navigation} ) {
       <Text style={styles.subherotitle}>Your easy to use notes app</Text>
       <Text style={styles.descriptiveText}>Notes:</Text>
 
-      <FlatList style={{ flex: 1 }} data={notes} renderItem={renderedNote} keyExtractor={(item) => item.id.toString()}/>
+      <FlatList style={{ flex: 1 }} data={notes} renderItem={renderedNote} keyExtractor={(item) => item.id.toString()} refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}/>
 
     <View style={styles.pageSpace}>
       <HomeButton onPress={() => navigation.navigate("New Note")} label={"New Note"} ></HomeButton>
@@ -71,7 +69,7 @@ export function HomeScreen( {navigation} ) {
       <Modal animationType='slide' visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
         <MenuProvider>
         <View style={[styles.modalView, { paddingTop: height * 0.05,  paddingBottom: height * 0.05}]}>
-          <NoteMenu>
+          <NoteMenu note={selectedNote} onEdit={() => { setModalVisible(false); navigation.navigate('Edit Note', { note: selectedNote }); }} onDelete={() => { setModalVisible(false); getData(); }}>
               <MaterialIcons name='menu' size={35}/>
           </NoteMenu>
           <Text style={styles.textDisplayTitle}>Title: {selectedNote?.note_title}</Text>
@@ -140,11 +138,13 @@ const styles = StyleSheet.create({
     marginTop: height * 0.01,
     fontSize: width * 0.06,
     fontWeight: "bold", 
+    width: width * 0.9,
   },
   textDisplayNote: {
     fontSize: width * 0.05,
     marginTop: height * 0.001,
     flex: 1,
+    width: width * 0.9,
   },
   userProfile: {
     marginLeft: width * 0.05,
