@@ -2,9 +2,10 @@ import { HomeButton } from '@/components/appButton';
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
 import { supabase } from '@/utils/supabase';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -62,6 +63,11 @@ export default function NewNoteScreen() {
         style={styles.textInputNote}
         onChangeText={setNoteMessage}
       />
+
+      <TouchableOpacity>
+        <MaterialIcons name="camera"/>
+      </TouchableOpacity>
+
 
       <View style={styles.formButtonRow}>
         <HomeButton onPress={logData} label={"Create"} ></HomeButton>

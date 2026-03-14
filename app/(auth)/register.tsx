@@ -23,7 +23,7 @@ export default function RegisterScreen() {
         if (error) Alert.alert(error.message);
         else {
             Alert.alert("Please verify your email");
-            router.push('./(auth)/login');
+            router.push('/(auth)/login');
         }
         }
         else {
