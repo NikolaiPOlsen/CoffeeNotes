@@ -1,14 +1,21 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HomeButton } from '@/components/appButton';
+import { Colors } from '@/constants/colors';
+import { useAuthContext } from '@/hooks/use-auth-context';
+import { supabase } from '@/utils/supabase';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-export function NewNoteScreen( {navigation} ) {
+export default function NewNoteScreen() {
   const [title, setTitle] = useState("");
   const [noteMessage, setNoteMessage] = useState("");
+  const { claims } = useAuthContext();
 
   const logData = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
     if (!title.trim()) {
       alert('Did you forget a title?');
       return;
@@ -18,21 +25,19 @@ export function NewNoteScreen( {navigation} ) {
       return;
     }
     try {
-      const existingNotes = await AsyncStorage.getItem('notes');
-      const notesArray = existingNotes ? JSON.parse(existingNotes) : [];
+      const { error } = await supabase
+      .from('Notes')
+      .insert({
+        note_title: title,
+        note_message: noteMessage,
+        user_id: user?.id,
+        display_name: user?.user_metadata?.display_name,
+      })
 
-      const newNote = {
-        id: Date.now(),
-        title: title,
-        noteMessage: noteMessage,
-      };
-
-      notesArray.push(newNote);
-
-      await AsyncStorage.setItem('notes', JSON.stringify(notesArray));
+      if (error) throw error;
 
       console.log('Note saved!');
-      {navigation.popTo('Home')};
+      router.push('./homeScreen');
     } 
     catch(error) {
       console.log(error)
@@ -41,12 +46,12 @@ export function NewNoteScreen( {navigation} ) {
     return(
         <SafeAreaView style={styles.boxContainer}>
     <KeyboardAvoidingView
-      style={{ flex: 1, width: 'width * 0.9' }}
+      style={{ flex: 1, width: width * 0.9 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
 
       <TextInput
         placeholder="Title"
-        placeholderTextColor={'#CFCFCF'}
+        placeholderTextColor={Colors.textLight}
         style={styles.textInputTitle}
         onChangeText={setTitle}
       />
@@ -54,20 +59,18 @@ export function NewNoteScreen( {navigation} ) {
       <TextInput
         multiline={true}
         placeholder="Note"
-        placeholderTextColor={'#CFCFCF'}
+        placeholderTextColor={Colors.textLight}
         style={styles.textInputNote}
         onChangeText={setNoteMessage}
       />
 
+      <TouchableOpacity>
+        <MaterialIcons name="camera"/>
+      </TouchableOpacity>
+
+
       <View style={styles.formButtonRow}>
-        <Pressable
-          onPress={logData}
-          style={({ pressed }) => [
-            styles.formButtons,
-            {backgroundColor: "#735530"},
-            pressed && styles.pressedButton]}>
-          <Text style={styles.smallButtonText}>Create</Text>
-        </Pressable>
+        <HomeButton onPress={logData} label={"Create"} ></HomeButton>
       </View>
 
     </KeyboardAvoidingView>
@@ -79,6 +82,7 @@ const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   boxContainer: {
+    backgroundColor: Colors.background,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   smallButtonText: {
-    color: 'white',
+    color: Colors.white,
     fontWeight: 'bold',
     fontSize: width * 0.06,
     textAlign: 'center',
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
   textInputTitle: {
     fontSize: width * 0.05,
     fontWeight: 'bold',
-    borderBottomColor: 'black',
+    borderBottomColor: Colors.border,
     borderBottomWidth: 1, 
   },
   textInputNote: {

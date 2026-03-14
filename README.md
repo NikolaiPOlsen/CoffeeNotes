@@ -4,7 +4,6 @@ Fast note is a simple to use notes app.
 ## Introduction
 This notes app is a simple and easy to use app created with the main focus on user friendly. It's packed with the most basic functions of a notes app to make sure the app stays uncluttered. It's mainly ment to take down notes on the go or in meetings if you just need a rough note to further elaberate on later.
 
-
 ## Key features
 - Create note
 - Edit note
