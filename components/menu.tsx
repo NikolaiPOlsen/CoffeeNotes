@@ -1,6 +1,6 @@
 import { DeleteNote } from '@/utils/deleteAlert';
 import { BlurView } from 'expo-blur';
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,13 +34,29 @@ export function NoteMenu({ children, note, onDelete, onEdit }) {
                     }
     }}>
         <BlurView intensity={10} tint="light">
-                    <MenuOption onSelect={onEdit} text='Edit' />
-                    <MenuOption onSelect={() => DeleteNote(note, onDelete)} text='Delete' />
-                    <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='' />
+                    <MenuOption onSelect={onEdit} text='Edit'/>
+                    <MenuOption onSelect={() => DeleteNote(note, onDelete)} text='Delete'/>
+                    <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text=''/>
                     </BlurView>
                 </MenuOptions>
             </Menu>
         </SafeAreaView>
+    )
+}
+
+export function PictureMenu({ children, CameraPhoto, PhotoAlbum }) {
+    return (
+        <View>
+            <Menu>
+                <MenuTrigger customStyles={{ triggerWrapper: { alignSelf: 'flex-start' } }}>
+                    {children}
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption onSelect={CameraPhoto} text='Take a photo'/>
+                    <MenuOption onSelect={PhotoAlbum} text='Choose from library'/>
+                </MenuOptions>
+            </Menu>
+        </View>
     )
 }
 
