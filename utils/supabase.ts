@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, processLock } from '@supabase/supabase-js';
+import * as SecureStore from 'expo-secure-store';
 import 'react-native-url-polyfill/auto';
 
 const isSSR = typeof window === 'undefined';
@@ -8,15 +8,15 @@ const ExpoWebSecureStoreAdapter = {
   getItem: (key: string) => {
     if (isSSR) return null;
     console.debug("getItem", { key })
-    return AsyncStorage.getItem(key)
+    return SecureStore.getItemAsync(key)
   },
   setItem: (key: string, value: string) => {
     if (isSSR) return;
-    return AsyncStorage.setItem(key, value)
+    return SecureStore.setItemAsync(key, value)
   },
   removeItem: (key: string) => {
     if (isSSR) return;
-    return AsyncStorage.removeItem(key)
+    return SecureStore.deleteItemAsync(key)
   },
 };
 

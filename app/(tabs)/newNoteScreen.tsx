@@ -1,4 +1,5 @@
-import { HomeButton, IconButton } from '@/components/appButton';
+import { HomeButton } from '@/components/appButton';
+import { PictureMenu } from '@/components/menu';
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
 import { supabase } from '@/utils/supabase';
@@ -6,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -37,13 +39,14 @@ export default function NewNoteScreen() {
       if (error) throw error;
 
       console.log('Note saved!');
-      router.push('./homeScreen');
+      router.push('/home');
     } 
     catch(error) {
       console.log(error)
     }
   }
     return(
+      <MenuProvider>
         <SafeAreaView style={styles.boxContainer}>
     <KeyboardAvoidingView
       style={{ flex: 1, width: width * 0.9, marginTop: height * 0.07, }}
@@ -64,10 +67,9 @@ export default function NewNoteScreen() {
         onChangeText={setNoteMessage}
       />
 
-      <View>
-        <IconButton onPress={() => false} icon={<Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />}></IconButton>
-      </View>
-
+      <PictureMenu CameraPhoto={() => alert('Camera not implemented yet')} PhotoAlbum={() => alert('Photo library not implemented yet')}>
+        <Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />
+      </PictureMenu>
 
       <View style={styles.formButtonRow}>
         <HomeButton onPress={logData} label={"Create"} ></HomeButton>
@@ -75,6 +77,7 @@ export default function NewNoteScreen() {
 
     </KeyboardAvoidingView>
   </SafeAreaView>
+</MenuProvider>
 )
 }
 
