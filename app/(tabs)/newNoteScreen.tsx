@@ -2,12 +2,13 @@ import { HomeButton } from '@/components/appButton';
 import { PictureMenu } from '@/components/menu';
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
+import useCameraPermission from '@/hooks/useImageCameraPermission';
 import useImagePermission from '@/hooks/useImageLibPermission';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Dimensions, FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,7 +17,8 @@ export default function NewNoteScreen() {
   const [title, setTitle] = useState("");
   const [noteMessage, setNoteMessage] = useState("");
   const { claims } = useAuthContext();
-  const { openLibrary } = useImagePermission();
+  const { openLibrary, images } = useImagePermission();
+  const { openCamera } = useCameraPermission();
 
   const logData = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -69,7 +71,17 @@ export default function NewNoteScreen() {
         onChangeText={setNoteMessage}
       />
 
-      <PictureMenu CameraPhoto={() => alert('Camera not implemented yet')} PhotoAlbum={openLibrary}>
+      <View>
+      {images.length > 0 && (<FlatList
+        data={images}
+        horizontal
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <Image source={{ uri: item }} style={{ width: width * 0.25, height: height * 0.1, margin: 5 }} />
+        )}/>)}
+      </View>
+
+      <PictureMenu CameraPhoto={openCamera} PhotoAlbum={openLibrary}>
         <Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />
       </PictureMenu>
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 export default function useImagePermission() {
     const [permission, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-    const [image, setImage] = useState<string | null>(null);
+    const [images, setImages] = useState<string[]>([]);
 
     const openLibrary = async () => {
     if (!permission?.granted) {
@@ -19,9 +19,9 @@ export default function useImagePermission() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImages(prev => [...prev, result.assets[0].uri]);
 
     }
     }
-return { openLibrary, image };
+    return { openLibrary, images }
 }
