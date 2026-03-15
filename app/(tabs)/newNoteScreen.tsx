@@ -2,6 +2,7 @@ import { HomeButton } from '@/components/appButton';
 import { PictureMenu } from '@/components/menu';
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
+import useImagePermission from '@/hooks/useImageLibPermission';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from "@expo/vector-icons";
 import { router } from 'expo-router';
@@ -15,6 +16,7 @@ export default function NewNoteScreen() {
   const [title, setTitle] = useState("");
   const [noteMessage, setNoteMessage] = useState("");
   const { claims } = useAuthContext();
+  const { openLibrary } = useImagePermission();
 
   const logData = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -67,7 +69,7 @@ export default function NewNoteScreen() {
         onChangeText={setNoteMessage}
       />
 
-      <PictureMenu CameraPhoto={() => alert('Camera not implemented yet')} PhotoAlbum={() => alert('Photo library not implemented yet')}>
+      <PictureMenu CameraPhoto={() => alert('Camera not implemented yet')} PhotoAlbum={openLibrary}>
         <Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />
       </PictureMenu>
 
