@@ -12,5 +12,5 @@ export default function useCameraPermission() {
     }
     setFacing(current => (current === 'back' ? 'front' : 'back'));
     };
-    return { openCamera }
+    return { openCamera, facing }
 }

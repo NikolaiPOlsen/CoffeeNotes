@@ -23,5 +23,5 @@ export default function useImagePermission() {
 
     }
     }
-    return { openLibrary, images }
+    return { openLibrary, images, addImage: (uri: string) => setImages(prev => [...prev, uri]) }
 }

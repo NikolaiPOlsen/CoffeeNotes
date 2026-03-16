@@ -1,13 +1,14 @@
 import { HomeButton } from '@/components/appButton';
+import CameraModal from '@/components/cameraModal';
 import { PictureMenu } from '@/components/menu';
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
-import useCameraPermission from '@/hooks/useImageCameraPermission';
 import useImagePermission from '@/hooks/useImageLibPermission';
 import { supabase } from '@/utils/supabase';
 import { Ionicons } from "@expo/vector-icons";
+import { CameraView } from 'expo-camera';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions, FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,8 +18,10 @@ export default function NewNoteScreen() {
   const [title, setTitle] = useState("");
   const [noteMessage, setNoteMessage] = useState("");
   const { claims } = useAuthContext();
-  const { openLibrary, images } = useImagePermission();
-  const { openCamera } = useCameraPermission();
+  const { openLibrary, images, addImage } = useImagePermission();
+  const [cameraVisible, setCameraVisible] = useState(false);
+  const cameraRef = useRef<CameraView>(null);
+
 
   const logData = async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -81,7 +84,8 @@ export default function NewNoteScreen() {
         )}/>)}
       </View>
 
-      <PictureMenu CameraPhoto={openCamera} PhotoAlbum={openLibrary}>
+      <CameraModal visible={cameraVisible} onClose={() => setCameraVisible(false)} cameraRef={cameraRef} onPhoto={addImage} />
+      <PictureMenu CameraPhoto={() => setCameraVisible(true)} PhotoAlbum={openLibrary}>
         <Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />
       </PictureMenu>
 

@@ -24,7 +24,6 @@ export default function RootLayout() {
           <Stack.Screen name='(auth)' options={{ headerShown: false }}/>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
           <Stack.Screen name="screens/editNoteScreen" options={{ headerBackTitle: 'Back', title: 'Edit note', headerStyle: { backgroundColor: Colors.background }, headerTintColor: 'black', }}/>
-          <Stack.Screen name="screens/newNoteScreen" options={{ headerBackTitle: 'Back' }}/>
         </Stack>
         <RootNavigation/>
       </MenuProvider>
