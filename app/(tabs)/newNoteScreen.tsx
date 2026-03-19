@@ -84,7 +84,8 @@ export default function NewNoteScreen() {
         )}/>)}
       </View>
 
-      <CameraModal visible={cameraVisible} onClose={() => setCameraVisible(false)} cameraRef={cameraRef} onPhoto={addImage} />
+      <CameraModal visible={cameraVisible} onClose={() => setCameraVisible(false)} onRetake={() => setCameraVisible(true)} cameraRef={cameraRef} onPhoto={addImage}/>
+
       <PictureMenu CameraPhoto={() => setCameraVisible(true)} PhotoAlbum={openLibrary}>
         <Ionicons name="attach-outline" size={width * 0.07} color={Colors.primary} />
       </PictureMenu>
