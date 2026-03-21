@@ -1,8 +1,18 @@
 import { Colors } from '@/constants/colors';
 import { useAuthContext } from '@/hooks/use-auth-context';
 import AuthProvider from '@/providers/auth-provider';
+import * as Notifications from 'expo-notifications';
 import { Redirect, Stack } from 'expo-router';
 import { MenuProvider } from 'react-native-popup-menu';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
 
 export function RootNavigation() {
   const { isLoggedIn, isLoading } = useAuthContext();
