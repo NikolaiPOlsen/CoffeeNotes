@@ -58,7 +58,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
             });
 
         if (error) console.error('Push token error:', error);
-        else console.log('Push token saved:', token.data);
     };
 
     registerPushToken();
@@ -72,7 +71,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         const { data } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', claims.sub)
+          .eq('id', claims.sub ?? claims.id)
           .single()
 
         setProfile(data)

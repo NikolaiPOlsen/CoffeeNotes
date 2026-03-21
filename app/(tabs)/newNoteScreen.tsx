@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { CameraView } from 'expo-camera';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Dimensions, FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -53,7 +53,7 @@ export default function NewNoteScreen() {
       router.replace('/home');
     }
     catch(error) {
-      console.log(error)
+      Alert.alert("Something went wrong");
     }
   }
     return(

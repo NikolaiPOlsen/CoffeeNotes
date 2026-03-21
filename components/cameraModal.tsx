@@ -41,14 +41,16 @@ export default function CameraModal({ visible, onClose, onRetake, cameraRef, onP
     return (
         <>
             <Modal animationType='slide' visible={visible} onRequestClose={onClose}>
-                {permission?.granted
+                {permission?.granted && visible
                     ? <CameraView ref={cameraRef} style={styles.camera} facing={facing}/>
-                    : <View style={styles.permissionContainer}>
-                        <Text style={styles.permissionText}>Kamera-tilgang kreves</Text>
-                        <TouchableOpacity onPress={requestPermission} style={styles.permissionButton}>
-                            <Text style={styles.permissionButtonText}>Gi tillatelse</Text>
-                        </TouchableOpacity>
-                      </View>
+                    : !permission?.granted
+                        ? <View style={styles.permissionContainer}>
+                            <Text style={styles.permissionText}>Kamera-tilgang kreves</Text>
+                            <TouchableOpacity onPress={requestPermission} style={styles.permissionButton}>
+                                <Text style={styles.permissionButtonText}>Gi tillatelse</Text>
+                            </TouchableOpacity>
+                          </View>
+                        : null
                 }
                 <View style={styles.buttonContainer}>
 
