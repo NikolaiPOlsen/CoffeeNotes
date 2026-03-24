@@ -1,7 +1,6 @@
 # CoffeeNotes - IOS
 CoffeeNotes is a simple to use notes app.
 
-assignment_4
 ## Introduction
 This notes app is a simple and easy to use notes app created with the main focus on user friendlyness. It's packed with the most basic functions of a notes app to make sure the app stays uncluttered. It's mainly ment to take down notes on the go or in meetings if you just need a rough note to further elaberate on later.
 
