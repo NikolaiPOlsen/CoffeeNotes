@@ -1,6 +1,7 @@
 # FastNotes - IOS
 Fast note is a simple to use notes app.
 
+assignment_3
 ## Assignment 3 - Implementations
 1. Permissions for camera use, access to photolibrary and to send notification
 2. Camera screen with validation and preview
